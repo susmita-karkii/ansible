@@ -1,0 +1,52 @@
+---
+# - hosts: all
+#   name: installing nodejs and its dependencies
+#   become: true
+
+#   tasks:
+  - name: Install nvm
+    shell: >
+      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+    args:
+      executable: /bin/bash
+
+  - name: Install Node.js with nvm
+    shell: >
+     source ~/.nvm/nvm.sh && nvm install --lts
+    args:
+      executable: /bin/bash
+
+  - name: install git
+    apt:
+      name: git
+      state: present 
+  
+  - name: create a new directory
+    become: true
+    file: 
+      path: /home/ubuntu/nodejs
+      state: directory
+      mode: "0755"
+      force: yes
+
+
+
+##  All good above Don't mess up with above
+
+  - name: clone the git file
+    git: 
+      repo: https://github.com/susmita-karkii/nodejs.git
+      dest: /home/ubuntu/nodejs
+      clone: yes
+
+  - name: Install npm package
+    npm:
+      path: /home/ubuntu/nodejs/
+      state: present
+      
+  - name: Start Node.js app
+    shell: node /home/ubuntu/nodejs/app.js
+
+        
+
+      
